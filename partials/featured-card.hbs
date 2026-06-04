@@ -1,0 +1,25 @@
+<article class="qh-featured {{post_class}}"{{#if codeinjection_head}} data-codeinjection-head="{{codeinjection_head}}"{{/if}}>
+    <a href="{{url}}" style="display:block;color:inherit;text-decoration:none;">
+        {{#if feature_image}}
+        <div class="qh-featured-image">
+            <img src="{{img_url feature_image size="xl"}}"
+                 srcset="{{img_url feature_image size="m"}} 1000w,
+                         {{img_url feature_image size="l"}} 1600w,
+                         {{img_url feature_image size="xl"}} 2000w"
+                 sizes="(max-width: 1280px) 100vw, 1280px"
+                 alt="{{#if feature_image_alt}}{{feature_image_alt}}{{else}}{{title}}{{/if}}"
+                 loading="{{#if @first}}eager{{else}}lazy{{/if}}">
+        </div>
+        {{/if}}
+        <div class="qh-featured-body">
+            <span class="qh-featured-date">{{date published_at format="MMM D, YYYY"}}</span>
+            <h2 class="qh-featured-title">{{title}}</h2>
+            {{#if custom_excerpt}}
+                <p class="qh-featured-excerpt">{{custom_excerpt}}</p>
+            {{else}}
+                <p class="qh-featured-excerpt">{{excerpt words="28"}}…</p>
+            {{/if}}
+            <div class="qh-featured-meta">{{reading_time}}</div>
+        </div>
+    </a>
+</article>

@@ -1,0 +1,22 @@
+{{!< default}}
+
+{{!-- Tag index page at /tag/.
+     Routed via routes.yaml. Lists every tag that has at least one post,
+     with post count, sortable client-side by name (A-Z, default), most
+     posts (desc), or fewest posts (asc). The tag name is the link; the
+     count in parens is plain de-emphasized text outside the link. --}}
+
+<header class="qh-index-header qh-tags-header fade-in d1">
+    <h1>All <em>tags</em></h1>
+    <div class="qh-tags-sort" role="group" aria-label="Sort tags">
+        <button type="button" data-sort="alpha" class="is-active" aria-pressed="true">A–Z</button>
+        <button type="button" data-sort="popular" aria-pressed="false">Most posts</button>
+        <button type="button" data-sort="reverse" aria-pressed="false">Fewest posts</button>
+    </div>
+</header>
+
+<div class="qh-index-body">
+    <p class="qh-tag-list">
+        {{#get "tags" limit="all" include="count.posts" order="name asc" filter="visibility:public"}}{{#foreach tags}}{{#if count.posts}}<span class="qh-tag-item" data-name="{{name}}" data-count="{{count.posts}}"><a href="{{url}}">{{name}}</a> <span class="qh-tag-count">({{count.posts}})</span></span>{{/if}}{{/foreach}}{{/get}}
+    </p>
+</div>

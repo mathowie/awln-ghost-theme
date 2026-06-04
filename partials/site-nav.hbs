@@ -1,0 +1,54 @@
+<nav class="qh-nav">
+    <div class="qh-nav-inner">
+        <a class="qh-logo" href="{{@site.url}}">
+            {{#if @site.logo}}
+                <img src="{{@site.logo}}" alt="{{@site.title}}">
+            {{else}}
+                A Whole Lotta <span>Nothing</span>
+            {{/if}}
+        </a>
+
+        {{#if @site.navigation}}
+            {{navigation}}
+        {{/if}}
+
+        {{!-- Hidden by default; revealed by main.js when admin mode is on
+             (toggle by visiting ?awln_admin=1 once). On post/page views the
+             link href is set to /ghost/#/editor/<type>/<id> client-side. --}}
+        <a href="/ghost/" class="qh-nav-edit" data-edit-link hidden>Edit</a>
+
+        {{!-- Ghost's native search. The data-ghost-search attribute makes
+             any element a trigger for the built-in search modal; Ghost
+             wires up the click handler and Cmd/Ctrl+K shortcut automatically. --}}
+        <button class="qh-nav-search" aria-label="Search" type="button" data-ghost-search>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+        </button>
+
+        {{!-- Theme toggle. Shows sun or moon depending on current theme.
+             JS wires this up to toggle light/dark and persist the choice. --}}
+        <button class="qh-theme-toggle" aria-label="Toggle dark mode" type="button">
+            <svg class="qh-theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+            </svg>
+            <svg class="qh-theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+        </button>
+
+        {{#unless @member}}
+            <a href="#/portal/signup" class="qh-nav-subscribe" data-portal="signup">Subscribe</a>
+        {{else}}
+            <a href="#/portal/account" class="qh-nav-subscribe" data-portal="account">Account</a>
+        {{/unless}}
+
+        {{!-- Mobile-only hamburger toggle. JS wires it up to the footer's nav,
+             which it scrolls into view (footer is the canonical nav on mobile). --}}
+        <button class="qh-nav-toggle" aria-label="Menu" aria-expanded="false" type="button">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+</nav>

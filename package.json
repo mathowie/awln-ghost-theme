@@ -1,0 +1,63 @@
+{
+  "name": "awln",
+  "description": "An editorial Ghost theme built for A Whole Lotta Nothing \u2014 readable typography, large-format photography, and a featured-plus-trio post grid.",
+  "version": "1.3.3",
+  "engines": {
+    "ghost": ">=5.0.0"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Matt Haughey",
+    "email": "matt@example.com"
+  },
+  "keywords": [
+    "ghost",
+    "ghost-theme",
+    "editorial",
+    "photography",
+    "minimal",
+    "serif"
+  ],
+  "config": {
+    "posts_per_page": 12,
+    "image_sizes": {
+      "xs": {
+        "width": 300
+      },
+      "s": {
+        "width": 600
+      },
+      "m": {
+        "width": 1000
+      },
+      "l": {
+        "width": 1600
+      },
+      "xl": {
+        "width": 2000
+      }
+    },
+    "card_assets": {
+      "exclude": [
+        "bookmark"
+      ]
+    },
+    "custom": {
+      "show_dropcap": {
+        "type": "boolean",
+        "default": true,
+        "description": "Show a large drop capital on the first paragraph of every post."
+      },
+      "header_tagline": {
+        "type": "text",
+        "default": "Notes on woodworking, homelabs, EVs, and whatever else holds my attention this month.",
+        "description": "Short italic tagline shown next to the title on the homepage."
+      },
+      "header_title_word": {
+        "type": "text",
+        "default": "writing",
+        "description": "The accent-colored italic word in the homepage header (e.g. 'Latest writing')."
+      }
+    }
+  }
+}

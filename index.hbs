@@ -1,0 +1,78 @@
+{{!< default}}
+
+{{!-- Homepage: featured + trio repeating pattern.
+     With posts_per_page=12 we render 3 cycles of (1 featured + 3 trio cards).
+     Each cycle gates on posts.length to render only what's available. --}}
+
+<header class="qh-index-header fade-in d1">
+    <h1>Latest <em>{{#if @custom.header_title_word}}{{@custom.header_title_word}}{{else}}writing{{/if}}</em></h1>
+    {{#if @custom.header_tagline}}
+        <p class="desc">{{@custom.header_tagline}}</p>
+    {{else}}{{#if @site.description}}
+        <p class="desc">{{@site.description}}</p>
+    {{/if}}{{/if}}
+</header>
+
+<div class="qh-index-body">
+
+    {{!-- Cycle 1 — index 0 (featured) + indices 1-3 (trio) --}}
+    {{#match posts.length ">" 0}}
+        {{#foreach posts limit="1"}}
+            {{> "featured-card" .}}
+        {{/foreach}}
+    {{/match}}
+    {{#match posts.length ">" 1}}
+        <section class="qh-trio">
+            {{#foreach posts from="2" limit="3"}}
+                {{> "post-card" .}}
+            {{/foreach}}
+        </section>
+    {{/match}}
+
+    {{!-- Cycle 2 — index 4 (featured) + indices 5-7 (trio) --}}
+    {{#match posts.length ">" 4}}
+        {{#foreach posts from="5" limit="1"}}
+            {{> "featured-card" .}}
+        {{/foreach}}
+    {{/match}}
+    {{#match posts.length ">" 5}}
+        <section class="qh-trio">
+            {{#foreach posts from="6" limit="3"}}
+                {{> "post-card" .}}
+            {{/foreach}}
+        </section>
+    {{/match}}
+
+    {{!-- Cycle 3 — index 8 (featured) + indices 9-11 (trio) --}}
+    {{#match posts.length ">" 8}}
+        {{#foreach posts from="9" limit="1"}}
+            {{> "featured-card" .}}
+        {{/foreach}}
+    {{/match}}
+    {{#match posts.length ">" 9}}
+        <section class="qh-trio">
+            {{#foreach posts from="10" limit="3"}}
+                {{> "post-card" .}}
+            {{/foreach}}
+        </section>
+    {{/match}}
+
+</div>
+
+{{#if pagination.pages}}
+<div class="qh-pagination">
+    <span class="qh-page-info">Page {{pagination.page}} of {{pagination.pages}}</span>
+    <div class="qh-page-controls">
+        {{#if pagination.prev}}
+            <a href="{{page_url pagination.prev}}" class="qh-page-btn">← Newer</a>
+        {{else}}
+            <span class="qh-page-btn disabled">← Newer</span>
+        {{/if}}
+        {{#if pagination.next}}
+            <a href="{{page_url pagination.next}}" class="qh-page-btn">Older →</a>
+        {{else}}
+            <span class="qh-page-btn disabled">Older →</span>
+        {{/if}}
+    </div>
+</div>
+{{/if}}

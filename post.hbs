@@ -1,0 +1,144 @@
+{{!< default}}
+
+{{!-- Single post template. Wrapped in {{#post}} to establish post context
+     so {{title}}, {{content}}, etc. resolve correctly. --}}
+
+{{#post}}
+<article class="qh-article {{post_class}}" data-post-id="{{id}}" data-post-type="post">
+
+    <header>
+        <h1 class="qh-article-title fade-in d1">{{title}}</h1>
+
+        {{#if custom_excerpt}}
+            <p class="qh-article-deck fade-in d2">{{custom_excerpt}}</p>
+        {{/if}}
+
+        <div class="qh-byline fade-in d3">
+            {{#primary_author}}
+                <div class="qh-avatar">
+                    {{#if profile_image}}
+                        <img src="{{img_url profile_image size="xs"}}" alt="{{name}}">
+                    {{/if}}
+                </div>
+            {{/primary_author}}
+            <div class="qh-byline-text">
+                {{#primary_author}}
+                    <div class="qh-byline-name"><a href="{{url}}">{{name}}</a></div>
+                {{/primary_author}}
+                {{!-- Date + reading_time render OUTSIDE the author block because
+                     the {{reading_time}} helper is context-sensitive — inside
+                     {{#primary_author}} it can't find the post and silently
+                     outputs just the raw minutes number. --}}
+                <div class="qh-byline-meta">
+                    {{date published_at format="MMMM D, YYYY"}} · {{reading_time}}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    {{#if feature_image}}
+    <figure class="qh-hero fade-in d4">
+        <div class="qh-hero-image">
+            <img src="{{img_url feature_image size="xl"}}"
+                 srcset="{{img_url feature_image size="m"}} 1000w,
+                         {{img_url feature_image size="l"}} 1600w,
+                         {{img_url feature_image size="xl"}} 2000w"
+                 sizes="(max-width: 1280px) 100vw, 1280px"
+                 alt="{{#if feature_image_alt}}{{feature_image_alt}}{{else}}{{title}}{{/if}}"
+                 loading="eager">
+        </div>
+        {{#if feature_image_caption}}
+            <figcaption class="qh-hero-caption">{{{feature_image_caption}}}</figcaption>
+        {{/if}}
+    </figure>
+    {{/if}}
+
+    <section class="qh-prose">
+        {{content}}
+    </section>
+
+    {{#if tags}}
+    <footer class="qh-article-footer">
+        <div class="qh-tags">
+            {{#foreach tags}}
+                <a href="{{url}}" class="qh-tag">{{name}}</a>
+            {{/foreach}}
+        </div>
+
+        {{#if comments}}
+            <section class="qh-comments">
+                <h3>Comments</h3>
+                {{comments}}
+            </section>
+        {{/if}}
+    </footer>
+    {{else}}
+        {{#if comments}}
+        <footer class="qh-article-footer">
+            <section class="qh-comments">
+                <h3>Comments</h3>
+                {{comments}}
+            </section>
+        </footer>
+        {{/if}}
+    {{/if}}
+
+    {{!-- Social replies container. Main.js populates this by fetching each
+         URL in the #awln-replies JSON script tag (put in the post's Code
+         Injection Foot field). Hidden until JS confirms there are replies
+         to show; removed if the JSON is absent or empty. --}}
+    <section class="qh-replies" data-qh-replies hidden>
+        <h3 class="qh-replies-heading">
+            <span class="qh-replies-label">Replies from the social web</span>
+        </h3>
+        <div class="qh-replies-list"></div>
+    </section>
+
+</article>
+
+{{!-- Further Reading: 3 related posts with feature images.
+     First tries posts sharing the same primary tag, then falls back to recent
+     posts with feature images. Always excludes the current post. --}}
+{{#if primary_tag}}
+    {{#get "posts" filter="tags:{{primary_tag.slug}}+id:-{{id}}+feature_image:-null" limit="3" as |related|}}
+        {{#if related}}
+            <section class="qh-more">
+                <div class="qh-more-label">— Further Reading —</div>
+                <div class="qh-trio">
+                    {{#foreach related}}
+                        {{> "post-card" .}}
+                    {{/foreach}}
+                </div>
+            </section>
+        {{else}}
+            {{!-- No tagged siblings with images — fall back to recent. --}}
+            {{#get "posts" filter="id:-{{id}}+feature_image:-null" limit="3" as |fallback|}}
+                {{#if fallback}}
+                    <section class="qh-more">
+                        <div class="qh-more-label">— Further Reading —</div>
+                        <div class="qh-trio">
+                            {{#foreach fallback}}
+                                {{> "post-card" .}}
+                            {{/foreach}}
+                        </div>
+                    </section>
+                {{/if}}
+            {{/get}}
+        {{/if}}
+    {{/get}}
+{{else}}
+    {{!-- No primary tag at all — show recent posts with images. --}}
+    {{#get "posts" filter="id:-{{id}}+feature_image:-null" limit="3" as |recent|}}
+        {{#if recent}}
+            <section class="qh-more">
+                <div class="qh-more-label">— Further Reading —</div>
+                <div class="qh-trio">
+                    {{#foreach recent}}
+                        {{> "post-card" .}}
+                    {{/foreach}}
+                </div>
+            </section>
+        {{/if}}
+    {{/get}}
+{{/if}}
+{{/post}}

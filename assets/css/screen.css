@@ -1,0 +1,1968 @@
+/* ==========================================================================
+   AWLN — Ghost theme stylesheet
+   Editorial · Readable · Photo-forward
+   ========================================================================== */
+
+:root {
+  --paper: #f6f1e8;
+  --paper-dim: #ede7da;
+  --page-bg: #fdfbf6;
+  --ink: #1a1512;
+  --ink-soft: #463e36;
+  --ink-muted: #78706a;
+  --rule: #d9d1c0;
+  --accent: #b4421a;
+  --accent-soft: #e8d5b7;
+
+  /* Footer stays dark in both light and dark mode for visual consistency */
+  --footer-bg: #1a1512;
+  --footer-text: #ede7da;
+  --footer-muted: #8b827a;
+  --footer-accent: #e8d5b7;
+
+  --max-read: 640px;
+  --max-wide: 1280px;
+
+  --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+  --font-heading: 'Signika Negative', Georgia, serif;
+}
+
+/* Dark mode. Applied when the reader's OS prefers dark AND no manual
+   override is set, OR when the reader has manually chosen dark via the
+   nav toggle (stored in localStorage, applied as data-theme="dark" on
+   <html>). The [data-theme="light"] override lets someone stay in light
+   mode even if their OS is in dark mode. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #2a241f;
+    --paper-dim: #1f1a16;
+    --page-bg: #161210;
+    --ink: #ece4d5;
+    --ink-soft: #bfb4a1;
+    --ink-muted: #8b8173;
+    --rule: #3d342c;
+    --accent: #e07a4a;
+    --accent-soft: #4a3a2a;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #2a241f;
+  --paper-dim: #1f1a16;
+  --page-bg: #161210;
+  --ink: #ece4d5;
+  --ink-soft: #bfb4a1;
+  --ink-muted: #8b8173;
+  --rule: #3d342c;
+  --accent: #e07a4a;
+  --accent-soft: #4a3a2a;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  background: var(--paper);
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--gh-font-body, var(--font-serif));
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 50, "WONK" 0;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+#site-main {
+  background: var(--page-bg);
+}
+
+/* Honor Ghost's selected heading font when set; fall back to our serif. */
+h1, h2, h3, h4, h5, h6,
+.qh-article-title,
+.qh-featured-title,
+.qh-post-title,
+.qh-page-title,
+.qh-card-title,
+.qh-index-header h1 {
+  font-family: var(--gh-font-heading, var(--font-serif));
+}
+
+/* In-post subheadings use Signika Negative */
+.qh-prose h2,
+.qh-prose h3 {
+  font-family: var(--font-heading);
+}
+
+
+img { max-width: 100%; height: auto; display: block; }
+
+::selection { background: var(--accent); color: var(--paper); }
+
+/* ==========================================================================
+   Site nav
+   ========================================================================== */
+
+.qh-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--paper);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+.qh-nav-inner {
+  max-width: var(--max-wide);
+  margin: 0 auto;
+  padding: 1.1rem 2rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2rem;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.qh-logo {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--ink);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.qh-logo:hover { opacity: 0.7; }
+.qh-logo:has(img) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.qh-logo img { height: 28px; width: auto; }
+.qh-logo span { color: var(--accent); }
+
+.qh-nav-links { display: flex; gap: 2rem; list-style: none; }
+.qh-nav-links a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  transition: color 0.2s;
+  font-weight: 500;
+}
+.qh-nav-links a:hover { color: var(--accent); }
+
+.qh-nav-subscribe {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.55rem 1.1rem;
+  background: var(--accent);
+  color: var(--paper);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+}
+.qh-nav-subscribe:hover { background: var(--ink); transform: translateY(-1px); }
+
+/* Admin edit link — only visible to admins via localStorage toggle */
+.qh-nav-edit {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.5rem 0.85rem;
+  color: var(--ink-muted);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  text-decoration: none;
+  transition: color 0.2s, border-color 0.2s;
+}
+.qh-nav-edit::before {
+  content: "✎ ";
+  margin-right: 0.2em;
+}
+.qh-nav-edit:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Nav search button — triggers Ghost's native search modal via
+   data-ghost-search attribute. Styled to match the theme toggle. */
+.qh-nav-search {
+  background: transparent;
+  border: none;
+  padding: 0.4rem;
+  cursor: pointer;
+  color: var(--ink-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  transition: color 0.2s, background 0.2s;
+}
+.qh-nav-search:hover {
+  color: var(--accent);
+  background: var(--paper-dim);
+}
+
+/* Theme toggle — sun/moon icon button. Shows the icon for the mode you'd
+   switch TO (sun in dark mode, moon in light mode). */
+.qh-theme-toggle {
+  background: transparent;
+  border: none;
+  padding: 0.4rem;
+  cursor: pointer;
+  color: var(--ink-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  transition: color 0.2s, background 0.2s;
+}
+.qh-theme-toggle:hover {
+  color: var(--accent);
+  background: var(--paper-dim);
+}
+.qh-theme-toggle .qh-theme-icon-sun,
+.qh-mobile-theme .qh-theme-icon-sun { display: none; }
+.qh-theme-toggle .qh-theme-icon-moon,
+.qh-mobile-theme .qh-theme-icon-moon { display: block; }
+:root[data-theme="dark"] .qh-theme-toggle .qh-theme-icon-sun,
+:root[data-theme="dark"] .qh-mobile-theme .qh-theme-icon-sun { display: block; }
+:root[data-theme="dark"] .qh-theme-toggle .qh-theme-icon-moon,
+:root[data-theme="dark"] .qh-mobile-theme .qh-theme-icon-moon { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .qh-theme-toggle .qh-theme-icon-sun,
+  :root:not([data-theme="light"]) .qh-mobile-theme .qh-theme-icon-sun { display: block; }
+  :root:not([data-theme="light"]) .qh-theme-toggle .qh-theme-icon-moon,
+  :root:not([data-theme="light"]) .qh-mobile-theme .qh-theme-icon-moon { display: none; }
+}
+
+/* ==========================================================================
+   Index / archive (featured + trio pattern)
+   ========================================================================== */
+
+.qh-index-header {
+  max-width: var(--max-wide);
+  margin: 0 auto;
+  padding: 4rem 2rem 2.5rem;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  border-bottom: 1px solid var(--rule);
+}
+.qh-index-header h1 {
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  font-variation-settings: "SOFT" 30, "opsz" 144;
+}
+.qh-index-header h1 em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 300;
+}
+.qh-index-header .desc {
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 1.1rem;
+  max-width: 380px;
+  text-align: right;
+  line-height: 1.45;
+}
+
+.qh-index-body {
+  max-width: var(--max-wide);
+  margin: 0 auto;
+  padding: 3rem 2rem 5rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Featured (full-width) post card */
+.qh-featured {
+  display: block;
+  margin-bottom: 4rem;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.qh-featured:hover { transform: translateY(-3px); }
+.qh-featured-image {
+  position: relative;
+  aspect-ratio: 21 / 9;
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--paper-dim);
+  box-shadow: 0 1px 2px rgba(26,21,18,0.08), 0 20px 40px -20px rgba(26,21,18,0.3);
+  margin-bottom: 1.75rem;
+  transition: box-shadow 0.4s;
+}
+.qh-featured:hover .qh-featured-image {
+  box-shadow: 0 1px 2px rgba(26,21,18,0.08), 0 28px 55px -22px rgba(26,21,18,0.4);
+}
+.qh-featured-image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.qh-featured:hover .qh-featured-image img { transform: scale(1.03); }
+
+.qh-featured-body { max-width: 780px; }
+.qh-featured-date {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.65rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.qh-featured-date::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: var(--accent);
+}
+.qh-featured-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.85rem, 3.2vw, 2.6rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--ink);
+  font-variation-settings: "SOFT" 30, "opsz" 96;
+  margin-bottom: 0.75rem;
+  transition: color 0.2s;
+}
+.qh-featured:hover .qh-featured-title { color: var(--accent); }
+.qh-featured-excerpt {
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  font-weight: 300;
+  margin-bottom: 0.85rem;
+  max-width: 640px;
+}
+.qh-featured-meta {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.02em;
+}
+
+/* Trio of small cards */
+.qh-trio {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem 2.5rem;
+  margin-bottom: 4rem;
+}
+
+.qh-card {
+  display: block;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  background: transparent;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.qh-card:hover { transform: translateY(-3px); }
+
+.qh-card-image {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--paper-dim);
+  box-shadow: 0 1px 2px rgba(26,21,18,0.08), 0 12px 28px -16px rgba(26,21,18,0.25);
+  margin-bottom: 1.1rem;
+  transition: box-shadow 0.4s;
+}
+.qh-card:hover .qh-card-image {
+  box-shadow: 0 1px 2px rgba(26,21,18,0.08), 0 20px 40px -18px rgba(26,21,18,0.32);
+}
+.qh-card-image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.qh-card:hover .qh-card-image img { transform: scale(1.04); }
+
+.qh-card-date {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.55rem;
+  display: inline-block;
+}
+.qh-card-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  line-height: 1.2;
+  color: var(--ink);
+  font-size: 1.3rem;
+  font-variation-settings: "SOFT" 30, "opsz" 72;
+  margin-bottom: 0.55rem;
+  transition: color 0.2s;
+}
+.qh-card:hover .qh-card-title { color: var(--accent); }
+.qh-card-meta {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  letter-spacing: 0.02em;
+}
+
+/* Pagination */
+.qh-pagination {
+  max-width: var(--max-wide);
+  margin: 0 auto;
+  padding: 0 2rem 5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  border-top: 1px solid var(--rule);
+  padding-top: 2.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+}
+.qh-page-info { color: var(--ink-muted); letter-spacing: 0.04em; }
+.qh-page-controls { display: flex; gap: 0.5rem; }
+.qh-page-btn {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.7rem 1.3rem;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.qh-page-btn:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.qh-page-btn.disabled { opacity: 0.35; pointer-events: none; }
+
+/* ==========================================================================
+   Article (post / page)
+   ========================================================================== */
+
+.qh-article {
+  max-width: var(--max-wide);
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+  position: relative;
+  z-index: 2;
+}
+
+.qh-article-title {
+  font-size: clamp(2.5rem, 6vw, 4.75rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  max-width: 900px;
+  margin: 0 0 1.75rem;
+  font-variation-settings: "SOFT" 30, "opsz" 120;
+}
+.qh-article-title em,
+.qh-featured-title em,
+.qh-card-title em,
+.qh-archive-title em {
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 300;
+}
+
+.qh-article-deck {
+  font-size: 1.35rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  font-weight: 300;
+  max-width: 700px;
+  margin-bottom: 2.5rem;
+  font-style: italic;
+}
+
+.qh-byline {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  padding: 1.25rem 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink-soft);
+}
+.qh-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c89f6a, #8b5a3c);
+  flex-shrink: 0;
+  border: 2px solid var(--paper);
+  box-shadow: 0 0 0 1px var(--rule);
+  overflow: hidden;
+}
+.qh-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.qh-byline-name { color: var(--ink); font-weight: 600; }
+.qh-byline-name a { color: inherit; text-decoration: none; }
+.qh-byline-name a:hover { color: var(--accent); }
+.qh-byline-meta { color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+
+/* Hero image on the post. No forced aspect ratio — show the image at its
+   natural proportions so portrait/square photos aren't cropped. */
+.qh-hero {
+  margin: 3.5rem 0;
+  position: relative;
+}
+.qh-hero-image {
+  width: 100%;
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--paper-dim);
+  box-shadow: 0 1px 2px rgba(26,21,18,0.08), 0 20px 60px -20px rgba(26,21,18,0.25);
+}
+.qh-hero-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.qh-hero-caption {
+  margin-top: 0.85rem;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  font-style: normal !important;
+  text-align: center;
+}
+.qh-hero-caption a {
+  color: var(--ink-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--ink-muted);
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+.qh-hero-caption a:hover {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   .qh-prose — post body (Ghost-rendered HTML, including Koenig cards)
+   ========================================================================== */
+
+.qh-prose {
+  max-width: var(--max-read);
+  margin: 0 auto;
+  font-size: 1.18rem;
+  line-height: 1.75;
+  color: var(--ink);
+}
+
+.qh-prose > * + * { margin-top: 1.5rem; }
+
+.qh-prose p {
+  font-weight: 400;
+}
+
+/* Drop cap */
+body.show-dropcap .qh-prose > p:first-of-type::first-letter {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 5.5rem;
+  line-height: 0.85;
+  float: left;
+  margin: 0.35rem 0.75rem 0 -0.25rem;
+  color: var(--accent);
+  font-variation-settings: "SOFT" 20, "opsz" 144;
+}
+
+.qh-prose h2 {
+  font-size: clamp(1.75rem, 3.2vw, 2.4rem);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+  margin-top: 3.5rem;
+  margin-bottom: 1.25rem;
+  font-variation-settings: "SOFT" 30, "opsz" 120;
+}
+/* Strip italic/bold styling from <em>/<i>/<strong>/<b> that happen to sit
+   inside headings. Many old imported posts wrapped whole headings in these
+   tags; this normalizes them so headings use their own font weight and
+   upright style consistently, while leaving the tags styled normally when
+   used inline in paragraphs. */
+.qh-prose h2 em, .qh-prose h2 i,
+.qh-prose h3 em, .qh-prose h3 i,
+.qh-prose h4 em, .qh-prose h4 i {
+  font-style: normal;
+}
+.qh-prose h2 strong, .qh-prose h2 b,
+.qh-prose h3 strong, .qh-prose h3 b,
+.qh-prose h4 strong, .qh-prose h4 b {
+  font-weight: inherit;
+}
+.qh-prose h3 {
+  font-size: clamp(1.4rem, 2.4vw, 1.85rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-top: 2.75rem;
+  margin-bottom: 1rem;
+  color: var(--ink);
+  font-variation-settings: "SOFT" 30, "opsz" 110;
+}
+.qh-prose h4 {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-top: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.qh-prose a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  transition: all 0.2s;
+}
+.qh-prose a:hover { color: var(--accent); text-decoration-thickness: 2.5px; }
+
+.qh-prose strong { font-weight: 600; }
+.qh-prose em { font-style: italic; }
+
+.qh-prose ul, .qh-prose ol { padding-left: 1.5rem; }
+.qh-prose li + li { margin-top: 0.4rem; }
+
+.qh-prose blockquote {
+  margin: 2rem 0;
+  padding: 0.25rem 0 0.25rem 1.5rem;
+  border-left: 3px solid var(--accent);
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 1.1rem;
+}
+
+.qh-prose code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--paper-dim);
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  border: 1px solid var(--rule);
+}
+
+.qh-prose pre {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  background: var(--ink);
+  color: var(--paper-dim);
+  padding: 1.25rem 1.5rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  line-height: 1.5;
+}
+.qh-prose pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+.qh-prose hr {
+  border: none;
+  text-align: center;
+  margin: 3rem 0;
+}
+.qh-prose hr::after {
+  content: "✦ ✦ ✦";
+  letter-spacing: 1rem;
+  color: var(--accent);
+  font-size: 0.75rem;
+}
+
+/* Pullquote (using Ghost's blockquote with class, or a manual aside) */
+.qh-prose .kg-blockquote-alt,
+.qh-prose blockquote.kg-blockquote-alt {
+  margin: 3rem auto;
+  padding: 0;
+  border: none;
+  font-size: 2rem;
+  line-height: 1.3;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--ink);
+  text-align: center;
+  position: relative;
+  max-width: 580px;
+}
+.qh-prose .kg-blockquote-alt::before,
+.qh-prose .kg-blockquote-alt::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 1px;
+  background: var(--accent);
+  margin: 1.5rem auto;
+}
+
+/* ---- Ghost Koenig editor cards (kg-*) -------------------------------- */
+
+.qh-prose .kg-card { margin-top: 2rem; margin-bottom: 2rem; }
+
+/* Wide and full-width image cards break out of the narrow text column.
+   Uses Casper's pattern: target the img's max-width by viewport units, and
+   let margin auto + centering on the figure handle positioning. */
+.qh-prose .kg-width-wide {
+  position: relative;
+  width: 85vw;
+  max-width: 1040px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.qh-prose .kg-width-full {
+  position: relative;
+  width: 100vw;
+  max-width: 100vw;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Ensure wide/full image cards actually display their image at the full
+   card width; Ghost's img tags have width/height attrs that otherwise
+   constrain display size. */
+.qh-prose .kg-width-wide img,
+.qh-prose .kg-width-full img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.qh-prose .kg-image-card img,
+.qh-prose .kg-gallery-card img {
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(26,21,18,0.08), 0 20px 60px -20px rgba(26,21,18,0.2);
+}
+
+.qh-prose figcaption,
+.qh-prose .kg-image-card figcaption,
+.qh-prose .kg-gallery-card figcaption {
+  margin-top: 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  font-style: normal !important;
+  text-align: center;
+  max-width: var(--max-read);
+  margin-left: auto;
+  margin-right: auto;
+}
+.qh-prose figcaption a,
+.qh-prose .kg-image-card figcaption a,
+.qh-prose .kg-gallery-card figcaption a {
+  color: var(--ink-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--ink-muted);
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+.qh-prose figcaption a:hover,
+.qh-prose .kg-image-card figcaption a:hover,
+.qh-prose .kg-gallery-card figcaption a:hover {
+  opacity: 1;
+}
+
+/* Gallery card */
+.qh-prose .kg-gallery-container { display: flex; flex-direction: column; gap: 0.75rem; }
+.qh-prose .kg-gallery-row { display: flex; gap: 0.75rem; }
+.qh-prose .kg-gallery-image img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Callout card */
+.qh-prose .kg-callout-card {
+  background: var(--paper-dim);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  border-radius: 3px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+.qh-prose .kg-callout-emoji { font-size: 1.3rem; }
+.qh-prose .kg-callout-text { font-size: 1rem; line-height: 1.55; }
+
+/* Button card */
+.qh-prose .kg-button-card a {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.85rem 1.6rem;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.qh-prose .kg-button-card a:hover { background: var(--accent); }
+
+/* Bookmark card */
+.qh-prose .kg-bookmark-card a.kg-bookmark-container {
+  display: flex;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  background: var(--paper-dim);
+  transition: box-shadow 0.2s;
+}
+.qh-prose .kg-bookmark-card a.kg-bookmark-container:hover {
+  box-shadow: 0 6px 18px -6px rgba(26,21,18,0.18);
+}
+.qh-prose .kg-bookmark-content { padding: 1rem 1.25rem; flex: 1; }
+.qh-prose .kg-bookmark-title { font-weight: 600; margin-bottom: 0.35rem; }
+.qh-prose .kg-bookmark-description {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+  line-height: 1.45;
+}
+.qh-prose .kg-bookmark-metadata {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  margin-top: 0.75rem;
+}
+.qh-prose .kg-bookmark-thumbnail { flex: 0 0 200px; }
+.qh-prose .kg-bookmark-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+.qh-prose .kg-bookmark-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 0.5rem;
+  vertical-align: text-bottom;
+}
+.qh-prose .kg-bookmark-author,
+.qh-prose .kg-bookmark-publisher {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  font-weight: 500;
+}
+.qh-prose .kg-bookmark-author::after {
+  content: "·";
+  margin: 0 0.5rem;
+  color: var(--rule);
+}
+
+/* Embedded video / audio.
+   Embeds default to "wide" so YouTube/Vimeo videos don't get stuck in the
+   narrow text column. If the writer manually picks "wide" or "full" in the
+   editor, those rules above already take precedence. */
+.qh-prose .kg-embed-card,
+.qh-prose .kg-video-card,
+.qh-prose .kg-audio-card { border-radius: 3px; overflow: hidden; }
+
+.qh-prose .kg-embed-card:not(.kg-width-wide):not(.kg-width-full),
+.qh-prose .kg-video-card:not(.kg-width-wide):not(.kg-width-full) {
+  width: min(880px, 100vw - 4rem);
+  margin-left: 50%;
+  transform: translateX(-50%);
+  max-width: none;
+}
+
+/* Force YouTube/Vimeo iframes to fill their container with 16:9 aspect.
+   Other embeds (Spotify, Twitter, etc.) keep their native dimensions. */
+.qh-prose .kg-embed-card iframe[src*="youtube.com"],
+.qh-prose .kg-embed-card iframe[src*="youtube-nocookie.com"],
+.qh-prose .kg-embed-card iframe[src*="vimeo.com"],
+.qh-prose .kg-video-card iframe {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 16 / 9;
+  display: block;
+}
+
+/* Toggle card */
+.qh-prose .kg-toggle-card {
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 1rem 1.25rem;
+}
+.qh-prose .kg-toggle-heading { font-weight: 600; cursor: pointer; }
+
+/* ==========================================================================
+   Post footer: tags, author card, subscribe, related
+   ========================================================================== */
+
+.qh-article-footer {
+  max-width: var(--max-read);
+  margin: 3rem auto 0;
+}
+
+.qh-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.qh-article-footer > .qh-tags:not(:last-child) {
+  margin-bottom: 2rem;
+}
+.qh-tag {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.qh-tag:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+.qh-author-card {
+  display: flex;
+  gap: 1.5rem;
+  padding: 2rem;
+  background: var(--paper-dim);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  margin-bottom: 3rem;
+}
+.qh-author-card .qh-avatar { width: 64px; height: 64px; }
+.qh-author-card h4 { font-size: 1.15rem; font-weight: 600; margin-bottom: 0.35rem; }
+.qh-author-card p {
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  font-family: var(--font-sans);
+}
+.qh-author-card a { color: var(--accent); text-decoration: none; }
+.qh-author-card a:hover { text-decoration: underline; }
+
+/* Members subscribe CTA */
+.qh-subscribe {
+  background: var(--ink);
+  color: var(--paper-dim);
+  padding: 3rem 2.5rem;
+  border-radius: 4px;
+  text-align: center;
+  margin: 3rem auto;
+  max-width: var(--max-read);
+}
+.qh-subscribe h3 {
+  font-family: var(--font-serif);
+  font-size: 1.9rem;
+  font-weight: 400;
+  font-style: italic;
+  margin-bottom: 0.75rem;
+  color: var(--paper);
+  font-variation-settings: "SOFT" 30, "opsz" 72;
+}
+.qh-subscribe h3 em { color: var(--accent-soft); }
+.qh-subscribe p {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: #aea59d;
+  line-height: 1.55;
+  margin-bottom: 1.75rem;
+  max-width: 440px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.qh-subscribe-form {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 420px;
+  margin: 0 auto;
+}
+.qh-subscribe-form input[type="email"] {
+  flex: 1;
+  padding: 0.85rem 1.1rem;
+  border: 1px solid #3b332b;
+  background: #2a241f;
+  color: var(--paper);
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  border-radius: 999px;
+  outline: none;
+}
+.qh-subscribe-form input[type="email"]::placeholder { color: #8b827a; }
+.qh-subscribe-form input[type="email"]:focus { border-color: var(--accent); }
+.qh-subscribe-form button {
+  padding: 0.85rem 1.4rem;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--accent);
+  color: var(--paper);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.qh-subscribe-form button:hover { background: #9a3915; }
+
+/* Further Reading */
+.qh-more {
+  max-width: var(--max-wide);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+  border-top: 1px solid var(--rule);
+  position: relative;
+  z-index: 2;
+}
+.qh-more-label {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* ==========================================================================
+   Comments
+   ========================================================================== */
+
+.qh-comments {
+  max-width: var(--max-read);
+  margin: 4rem auto 0;
+  padding-top: 3rem;
+  border-top: 1px solid var(--rule);
+}
+.qh-comments h3 {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 500;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.qh-footer {
+  background: var(--footer-bg);
+  color: var(--footer-text);
+  padding: 4rem 2rem 2.5rem;
+  position: relative;
+  z-index: 2;
+}
+.qh-footer-inner {
+  max-width: var(--max-wide);
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+.qh-footer-brand {
+  font-family: var(--font-heading);
+  font-style: normal;
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--footer-text);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.qh-footer-brand:hover { opacity: 0.7; }
+.qh-footer-brand span { color: var(--footer-accent); }
+
+.qh-footer-nav { display: flex; gap: 1.5rem; list-style: none; font-family: var(--font-sans); font-size: 0.82rem; }
+.qh-footer-nav a {
+  color: var(--footer-text);
+  text-decoration: none;
+  opacity: 0.75;
+  transition: opacity 0.2s;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.qh-footer-nav a:hover { opacity: 1; color: var(--footer-accent); }
+
+.qh-footer-meta {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  color: var(--footer-muted);
+  letter-spacing: 0.06em;
+}
+
+.qh-footer-social {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 0.85rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.qh-footer-social li { margin: 0; padding: 0; }
+.qh-footer-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--footer-text);
+  opacity: 0.75;
+  text-decoration: none;
+  transition: opacity 0.2s, color 0.2s, background 0.2s;
+}
+.qh-footer-social a:hover {
+  opacity: 1;
+  color: var(--footer-accent);
+  background: rgba(255,255,255,0.06);
+}
+.qh-footer-social svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+/* Fallback when a platform has no matching partials/icons/<type>.hbs yet —
+   shows the platform name as a small text chip so the page never breaks
+   if Ghost adds a new supported platform before the theme is updated. */
+.qh-footer-social-fallback {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0 0.55rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  line-height: 1.8;
+}
+
+
+/* ==========================================================================
+   Error page
+   ========================================================================== */
+
+.qh-error {
+  max-width: 640px;
+  margin: 6rem auto;
+  padding: 0 2rem;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+.qh-error-code {
+  font-size: clamp(6rem, 16vw, 10rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--accent);
+  line-height: 1;
+  font-variation-settings: "SOFT" 40, "opsz" 144;
+}
+.qh-error-title {
+  font-size: 2rem;
+  font-weight: 500;
+  margin: 1rem 0;
+  letter-spacing: -0.02em;
+}
+.qh-error-desc { color: var(--ink-soft); font-style: italic; margin-bottom: 2rem; }
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.fade-in.d1 { animation-delay: 0.05s; }
+.fade-in.d2 { animation-delay: 0.18s; }
+.fade-in.d3 { animation-delay: 0.32s; }
+.fade-in.d4 { animation-delay: 0.48s; }
+
+.qh-featured, .qh-card {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.qh-trio .qh-card:nth-child(1) { animation-delay: 0.05s; }
+.qh-trio .qh-card:nth-child(2) { animation-delay: 0.12s; }
+.qh-trio .qh-card:nth-child(3) { animation-delay: 0.19s; }
+
+@keyframes rise {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in, .qh-featured, .qh-card { animation: none; opacity: 1; transform: none; }
+  .qh-card:hover, .qh-featured:hover { transform: none; }
+  .qh-card:hover .qh-card-image img,
+  .qh-featured:hover .qh-featured-image img { transform: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+/* Hamburger toggle — hidden on desktop, shown on mobile.
+   Three stacked bars that animate to an X when expanded. */
+.qh-nav-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  width: 38px;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+}
+.qh-nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--ink);
+  border-radius: 2px;
+  transition: transform 0.25s, opacity 0.2s;
+  transform-origin: center;
+}
+.qh-nav-toggle[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.qh-nav-toggle[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+}
+.qh-nav-toggle[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Mobile menu is hidden by default at all widths. The .is-open class only
+   has effect inside the mobile media query, so on desktop the dropdown
+   never shows regardless of state. */
+.qh-mobile-menu {
+  display: none;
+}
+
+/* Footer nav — the primary nav renders here as `.qh-nav-links`. Override the
+   header's light styling with dark-footer appropriate colors. */
+.qh-footer-nav-wrap .qh-nav-links {
+  list-style: none;
+  gap: 1.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+}
+.qh-footer-nav-wrap .qh-nav-links a {
+  color: var(--footer-text);
+  text-decoration: none;
+  opacity: 0.75;
+  transition: opacity 0.2s, color 0.2s;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+}
+.qh-footer-nav-wrap .qh-nav-links a:hover {
+  opacity: 1;
+  color: var(--footer-accent);
+}
+
+@media (max-width: 900px) {
+  .qh-trio { grid-template-columns: repeat(2, 1fr); gap: 2.5rem 1.75rem; }
+  /* Hide primary nav in header on mobile; footer still shows it stacked. */
+  .qh-nav > .qh-nav-inner > .qh-nav-links { display: none; }
+  /* Hide the subscribe and edit buttons too when collapsed; hamburger is
+     the single entry point on mobile. */
+  .qh-nav-subscribe, .qh-nav-edit, .qh-theme-toggle, .qh-nav-search { display: none; }
+  .qh-nav-toggle { display: flex; }
+  /* Hamburger has no text content -> no real baseline. On mobile,
+     switch to center alignment so the icon lines up with the wordmark. */
+  .qh-nav-inner { align-items: center; }
+
+  .qh-index-header { flex-direction: column; align-items: flex-start; }
+  .qh-index-header .desc { text-align: left; }
+  .qh-featured-image { aspect-ratio: 16 / 9; }
+  .qh-article, .qh-index-body, .qh-more { padding: 2.5rem 1.5rem 4rem; }
+  .qh-prose { font-size: 1.12rem; }
+  body.show-dropcap .qh-prose > p:first-of-type::first-letter { font-size: 4rem; }
+  .qh-prose .kg-width-wide,
+  .qh-prose .kg-width-full {
+    width: 100vw;
+    max-width: 100vw;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* Footer: stack vertically on mobile, with nav links as a tall readable list */
+  .qh-footer-inner { align-items: flex-start; flex-direction: column; }
+  .qh-footer-nav-wrap .qh-nav-links {
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 0;
+    margin: 0;
+  }
+  .qh-footer-nav-wrap .qh-nav-links a {
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+  }
+
+  /* When hamburger is expanded, a full-width dropdown panel drops from nav.
+     This is a simple drop panel with the same links as the footer. */
+  .qh-mobile-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+    padding: 1rem 2rem 1.5rem;
+    z-index: 9;
+  }
+  .qh-mobile-menu.is-open { display: block; }
+  .qh-mobile-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .qh-mobile-menu a {
+    display: block;
+    padding: 0.65rem 0;
+    color: var(--ink);
+    text-decoration: none;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--rule);
+  }
+  .qh-mobile-menu a:last-child { border-bottom: none; }
+  .qh-mobile-menu a:hover { color: var(--accent); }
+
+  /* Mobile search button. Matches the link row styling but is a <button>
+     with an inline svg + label. */
+  .qh-mobile-menu .qh-mobile-search,
+  .qh-mobile-menu .qh-mobile-theme {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 0.65rem 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink);
+    text-align: left;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .qh-mobile-menu .qh-mobile-search:hover,
+  .qh-mobile-menu .qh-mobile-theme:hover { color: var(--accent); }
+  .qh-mobile-menu .qh-mobile-search svg,
+  .qh-mobile-menu .qh-mobile-theme svg { flex-shrink: 0; }
+  .qh-mobile-menu .qh-mobile-subscribe {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.6rem 1.2rem;
+    background: var(--accent);
+    color: var(--paper);
+    border-radius: 999px;
+    border-bottom: none;
+    font-weight: 600;
+  }
+  .qh-nav { position: relative; }
+}
+
+@media (max-width: 600px) {
+  .qh-article-title { font-size: 2.25rem; }
+  .qh-article-deck { font-size: 1.15rem; }
+  .qh-prose .kg-bookmark-card a.kg-bookmark-container { flex-direction: column; }
+  .qh-prose .kg-bookmark-thumbnail { flex: 0 0 180px; width: 100%; }
+}
+
+@media (max-width: 540px) {
+  .qh-trio { grid-template-columns: 1fr; gap: 2.5rem; }
+  .qh-index-header { padding: 2.5rem 1.5rem 2rem; }
+  .qh-pagination { flex-direction: column; gap: 1.25rem; padding: 2rem 1.5rem 4rem; }
+  .qh-featured { margin-bottom: 3rem; }
+  .qh-featured-excerpt { display: none; }
+  .qh-subscribe-form { flex-direction: column; }
+  .qh-subscribe-form button, .qh-subscribe-form input { width: 100%; }
+}
+
+/* ==========================================================================
+   Archive page — paginated list of all posts grouped by year
+   ========================================================================== */
+
+.qh-archive-body {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 3rem 2rem 5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.qh-archive-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.qh-archive-item {
+  display: grid;
+  grid-template-columns: 5rem 1fr;
+  align-items: baseline;
+  column-gap: 2rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px dotted var(--rule);
+}
+
+.qh-archive-year {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hide the year label when the previous item has the same data-year value.
+   The .qh-year-hidden class is added by archive-grouping in main.js after
+   the page renders. We use a class instead of pure CSS because CSS lacks a
+   "same attribute value as previous sibling" selector. */
+.qh-archive-item.qh-year-hidden .qh-archive-year {
+  visibility: hidden;
+}
+
+.qh-archive-link {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  text-decoration: none;
+  color: var(--ink);
+  transition: color 0.15s;
+}
+.qh-archive-link:hover { color: var(--accent); }
+
+.qh-archive-title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  line-height: 1.35;
+  font-weight: 400;
+  flex: 1 1 auto;
+}
+
+.qh-archive-date {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+/* Bigger year break — when the year changes, add extra space above */
+.qh-archive-item:not(.qh-year-hidden) {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+.qh-archive-item:not(.qh-year-hidden):first-child {
+  margin-top: 0;
+  padding-top: 0.55rem;
+  border-top: none;
+}
+
+@media (max-width: 600px) {
+  .qh-archive-body { padding: 2rem 1.5rem 4rem; }
+  .qh-archive-item {
+    grid-template-columns: 3.5rem 1fr;
+    column-gap: 1rem;
+  }
+  .qh-archive-year { font-size: 0.7rem; letter-spacing: 0.1em; }
+  .qh-archive-title { font-size: 0.98rem; }
+  .qh-archive-date { font-size: 0.72rem; }
+  .qh-archive-link { gap: 0.75rem; }
+}
+
+/* ==========================================================================
+   Lightbox (gallery images only)
+   ========================================================================== */
+
+.qh-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(14, 10, 8, 0.93);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem;
+  animation: qh-lb-fade 0.2s ease-out;
+}
+.qh-lightbox.is-open { display: flex; }
+
+@keyframes qh-lb-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.qh-lightbox-figure {
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+}
+.qh-lightbox-img {
+  max-width: 100%;
+  max-height: calc(100vh - 8rem);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 2px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+.qh-lightbox-caption {
+  color: rgba(237, 231, 218, 0.75);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-style: normal;
+  text-align: center;
+  max-width: 680px;
+}
+
+/* Close, prev, next buttons */
+.qh-lightbox-close,
+.qh-lightbox-prev,
+.qh-lightbox-next {
+  position: absolute;
+  background: rgba(26, 21, 18, 0.5);
+  color: #ede7da;
+  border: none;
+  font-size: 1.5rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.15s;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 2;
+}
+.qh-lightbox-close:hover,
+.qh-lightbox-prev:hover,
+.qh-lightbox-next:hover {
+  background: rgba(26, 21, 18, 0.85);
+}
+.qh-lightbox-close {
+  top: 1.5rem;
+  right: 1.5rem;
+  font-size: 1.8rem;
+}
+.qh-lightbox-prev {
+  left: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.qh-lightbox-next {
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.qh-lightbox-prev:hover { transform: translateY(-50%) scale(1.08); }
+.qh-lightbox-next:hover { transform: translateY(-50%) scale(1.08); }
+
+/* Hover treatment on gallery thumbs to hint at clickability */
+.qh-prose .kg-gallery-image img {
+  transition: opacity 0.2s, transform 0.2s;
+}
+.qh-prose .kg-gallery-image img:hover {
+  opacity: 0.88;
+}
+
+@media (max-width: 600px) {
+  .qh-lightbox { padding: 1rem; }
+  .qh-lightbox-img { max-height: calc(100vh - 5rem); }
+  .qh-lightbox-close,
+  .qh-lightbox-prev,
+  .qh-lightbox-next {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+  .qh-lightbox-close { top: 0.75rem; right: 0.75rem; }
+  .qh-lightbox-prev { left: 0.75rem; }
+  .qh-lightbox-next { right: 0.75rem; }
+}
+
+/* ==========================================================================
+   Social web replies (Mastodon + Bluesky) — Variant A: threaded comments
+   ========================================================================== */
+
+.qh-replies {
+  max-width: var(--max-read);
+  margin: 3rem auto 0;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--rule);
+}
+
+/* Decorative em-dashes flanking the heading text */
+.qh-replies-heading {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 1.75rem;
+  text-align: center;
+}
+.qh-replies-heading::before,
+.qh-replies-heading::after {
+  content: "—";
+  margin: 0 0.75rem;
+  color: var(--rule);
+}
+.qh-replies-label {
+  color: var(--ink-soft);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-style: italic;
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+}
+
+.qh-replies-list {
+  display: block;
+}
+
+/* Each reply: 2-column grid with avatar + main content.
+   Separated by a hairline rule. */
+.qh-reply {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 1rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.qh-reply:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.qh-reply-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--paper-dim);
+  display: block;
+  flex-shrink: 0;
+}
+.qh-reply-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.qh-reply-main {
+  min-width: 0; /* lets flex children ellipsis instead of overflow */
+}
+
+/* Head row: name, handle, date with platform pill. Wraps gracefully
+   when viewport is narrow. */
+.qh-reply-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.45rem;
+  margin-bottom: 0.45rem;
+  font-family: var(--font-sans);
+}
+
+.qh-reply-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+.qh-reply-name:hover { color: var(--accent); }
+
+.qh-reply-handle {
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+}
+.qh-reply-handle::before {
+  content: "·";
+  margin-right: 0.35rem;
+  color: var(--rule);
+}
+
+.qh-reply-date {
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+  margin-left: auto;
+}
+.qh-reply-date a { color: inherit; text-decoration: none; }
+.qh-reply-date a:hover { color: var(--accent); }
+
+/* Platform pill appended after the date via ::after pseudo.
+   Uses data-platform attribute to pick label + color. */
+.qh-reply-date[data-platform="mastodon"]::after {
+  content: "Mastodon";
+  display: inline-block;
+  margin-left: 0.6rem;
+  padding: 0.1rem 0.45rem;
+  background: #6364ff1a;
+  color: #5655c4;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+}
+.qh-reply-date[data-platform="bluesky"]::after {
+  content: "Bluesky";
+  display: inline-block;
+  margin-left: 0.6rem;
+  padding: 0.1rem 0.45rem;
+  background: #0085ff1a;
+  color: #0085ff;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+}
+
+/* Reply body: serif, slightly softer ink than the post's body text */
+.qh-reply-body {
+  font-family: var(--font-serif);
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.qh-reply-body p + p { margin-top: 0.6rem; }
+.qh-reply-body a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+.qh-reply-body a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* On narrow viewports the date drops below the name/handle instead
+   of squeezing the head row. */
+@media (max-width: 640px) {
+  .qh-reply-date {
+    margin-left: 0;
+    margin-top: 0.2rem;
+    width: 100%;
+  }
+  .qh-reply {
+    grid-template-columns: 38px 1fr;
+    gap: 0.85rem;
+  }
+  .qh-reply-avatar {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+
+/* ==========================================================================
+   Tag index page (/tag/)
+   ========================================================================== */
+
+.qh-tags-header {
+  padding-bottom: 2.5rem;
+}
+.qh-tags-sort {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+.qh-tags-sort button {
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--ink-soft);
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.5rem 0.95rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.qh-tags-sort button:hover {
+  color: var(--ink);
+  border-color: var(--ink-soft);
+}
+.qh-tags-sort button.is-active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+/* Inline paragraph of comma-separated tag links — feels like body prose. */
+.qh-tag-list {
+  margin: 1rem 0 4rem;
+  font-size: 1.05rem;
+  line-height: 1.9;
+  color: var(--ink);
+}
+.qh-tag-item a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  transition: color 0.2s, text-decoration-thickness 0.2s;
+}
+.qh-tag-item a:hover {
+  color: var(--accent);
+  text-decoration-thickness: 2.5px;
+}
+/* Post count next to each tag — outside the link, sans-serif, de-emphasized. */
+.qh-tag-count {
+  color: var(--ink-muted);
+  font-family: var(--font-sans);
+  font-size: 0.85em;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+/* Comma separator between tags — outside the link so the underline doesn't
+   carry through. Hidden after the last visible tag via :last-of-type. */
+.qh-tag-item:not(:last-of-type)::after {
+  content: ", ";
+  color: var(--ink-soft);
+}
+
+@media (max-width: 540px) {
+  .qh-tags-sort button { padding: 0.45rem 0.75rem; font-size: 0.7rem; }
+  .qh-tag-list { font-size: 1rem; }
+}
+
+
+/* ==========================================================================
+   Reply prompt (.rss-only card)
+   ========================================================================== */
+
+/* The .rss-only div is authored at the end of the lexical post body so RSS
+   feeds (which don't run JS) see it inline with the post. On the web, theme
+   JS relocates it into the .qh-replies container — visually it ends up
+   below tags + the qh-replies top-border (HR), above the heading. Class
+   name is historical; the prompt is now visible to all readers. */
+.rss-only {
+  padding: 0.9rem 1.15rem;
+  background: var(--paper-dim);
+  border-left: 3px solid var(--accent);
+  border-radius: 3px;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.rss-only a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.rss-only a:hover {
+  text-decoration: underline;
+}
+/* Inside .qh-prose (initial position before JS relocates) — give it some
+   air from the surrounding paragraphs. JS clears this when it moves the
+   element, but if JS is disabled/blocked the prompt stays here. */
+.qh-prose .rss-only { margin: 2.5rem 0 1rem; }
+/* Inside .qh-replies (after JS relocates) — qh-replies provides the
+   padding-top, so suppress top margin. Bottom margin matches the heading's
+   own margin-bottom for a balanced gap before "Replies from the social web". */
+.qh-replies .rss-only { margin: 0 0 1.75rem; }

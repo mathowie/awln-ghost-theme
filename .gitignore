@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# Node (in case you add gulp/dev tooling later)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local zip artifacts produced by package.sh — Ghost upload bundles
+dist/
+*.zip

@@ -1,0 +1,17 @@
+routes:
+  /tag/:
+    template: tag-index
+  /archive/:
+    controller: channel
+    template: archive
+    limit: 50
+    order: published_at desc
+
+collections:
+  /:
+    permalink: /{slug}/
+    template: index
+
+taxonomies:
+  tag: /tag/{slug}/
+  author: /author/{slug}/

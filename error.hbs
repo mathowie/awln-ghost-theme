@@ -1,0 +1,14 @@
+{{!< default}}
+
+<section class="qh-error">
+    <div class="qh-error-code">{{statusCode}}</div>
+    <h1 class="qh-error-title">{{#match statusCode "404"}}Page not found{{else}}Something's gone quiet.{{/match}}</h1>
+    <p class="qh-error-desc">
+        {{#match statusCode "404"}}
+            The page you were looking for doesn't exist, or has moved elsewhere.
+        {{else}}
+            {{message}}
+        {{/match}}
+    </p>
+    <p><a href="{{@site.url}}" class="qh-nav-subscribe" style="display:inline-block;">Back to the homepage</a></p>
+</section>

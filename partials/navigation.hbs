@@ -1,0 +1,17 @@
+{{!-- This partial is special: Ghost calls it automatically when the
+     {{navigation}} helper is used. The bare `navigation` variable and
+     `isSecondary` flag are only available inside this exact filename. --}}
+
+{{#if isSecondary}}
+    <ul class="qh-footer-nav">
+        {{#foreach navigation}}
+            <li><a href="{{url}}">{{label}}</a></li>
+        {{/foreach}}
+    </ul>
+{{else}}
+    <ul class="qh-nav-links">
+        {{#foreach navigation}}
+            <li><a href="{{url}}">{{label}}</a></li>
+        {{/foreach}}
+    </ul>
+{{/if}}

@@ -1,0 +1,43 @@
+{{!< default}}
+
+{{!-- Archive page: paginated list of all posts grouped by year.
+     Routed via routes.yaml with controller: channel at /archive/. --}}
+
+<header class="qh-index-header fade-in d1">
+    <h1>Archives</h1>
+    {{#if pagination.total}}
+        <p class="desc">All {{pagination.total}} posts, in reverse order. Page {{pagination.page}} of {{pagination.pages}}.</p>
+    {{/if}}
+</header>
+
+<div class="qh-archive-body">
+    <ol class="qh-archive-list">
+        {{#foreach posts}}
+            <li class="qh-archive-item" data-year="{{date published_at format='YYYY'}}"{{#if codeinjection_head}} data-codeinjection-head="{{codeinjection_head}}"{{/if}}>
+                <span class="qh-archive-year">{{date published_at format='YYYY'}}</span>
+                <a class="qh-archive-link" href="{{url}}">
+                    <span class="qh-archive-title">{{title}}</span>
+                    <span class="qh-archive-date">{{date published_at format='MMM D'}}</span>
+                </a>
+            </li>
+        {{/foreach}}
+    </ol>
+</div>
+
+{{#if pagination.pages}}
+<div class="qh-pagination">
+    <span class="qh-page-info">Page {{pagination.page}} of {{pagination.pages}}</span>
+    <div class="qh-page-controls">
+        {{#if pagination.prev}}
+            <a href="{{page_url pagination.prev}}" class="qh-page-btn">← Newer</a>
+        {{else}}
+            <span class="qh-page-btn disabled">← Newer</span>
+        {{/if}}
+        {{#if pagination.next}}
+            <a href="{{page_url pagination.next}}" class="qh-page-btn">Older →</a>
+        {{else}}
+            <span class="qh-page-btn disabled">Older →</span>
+        {{/if}}
+    </div>
+</div>
+{{/if}}

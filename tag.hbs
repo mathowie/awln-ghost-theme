@@ -1,0 +1,28 @@
+{{!< default}}
+
+{{!-- Tag archive — uniform 3-column grid, no featured rotation --}}
+
+{{#tag}}
+<header class="qh-index-header fade-in d1">
+    <h1>{{name}}</h1>
+    {{#if description}}<p class="desc">{{description}}</p>{{/if}}
+</header>
+{{/tag}}
+
+<div class="qh-index-body">
+    <div class="qh-trio">
+        {{#foreach posts}}
+            {{> "post-card" .}}
+        {{/foreach}}
+    </div>
+</div>
+
+{{#if pagination.pages}}
+<div class="qh-pagination">
+    <span class="qh-page-info">Page {{pagination.page}} of {{pagination.pages}}</span>
+    <div class="qh-page-controls">
+        {{#if pagination.prev}}<a href="{{page_url pagination.prev}}" class="qh-page-btn">← Newer</a>{{else}}<span class="qh-page-btn disabled">← Newer</span>{{/if}}
+        {{#if pagination.next}}<a href="{{page_url pagination.next}}" class="qh-page-btn">Older →</a>{{else}}<span class="qh-page-btn disabled">Older →</span>{{/if}}
+    </div>
+</div>
+{{/if}}

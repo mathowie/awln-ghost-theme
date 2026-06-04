@@ -1,0 +1,35 @@
+<footer class="qh-footer">
+    <div class="qh-footer-inner">
+        <a href="{{@site.url}}" class="qh-footer-brand">
+            A Whole Lotta <span>Nothing</span>
+        </a>
+
+        {{#if @site.navigation}}
+            <div class="qh-footer-nav-wrap">
+                {{navigation}}
+            </div>
+        {{/if}}
+
+        {{!-- Social accounts. Pulled from Settings → General → Social accounts.
+             Uses the {{#social_accounts}} helper (Ghost 5.x+). Block-form dynamic
+             partial: {{#> (concat "icons/" type)}} ... {{/undefined}} — if a new
+             platform ships before we add a matching partials/icons/<type>.hbs, the
+             inner <span> renders as a labelled fallback instead of erroring. --}}
+        {{#social_accounts @site}}
+            {{#if @first}}<ul class="qh-footer-social" aria-label="Social accounts">{{/if}}
+                <li>
+                    <a href="{{href}}" target="_blank" rel="me noopener" aria-label="{{name}}" title="{{name}}">
+                        {{#> (concat "icons/" type)}}
+                            <span class="qh-footer-social-fallback">{{name}}</span>
+                        {{/undefined}}
+                    </a>
+                </li>
+            {{#if @last}}</ul>{{/if}}
+        {{/social_accounts}}
+
+        <div class="qh-footer-meta">
+            © {{date format="YYYY"}} A Whole Lotta Nothing ·
+            Published with <a href="https://ghost.org" style="color:inherit;" rel="noopener">Ghost</a>
+        </div>
+    </div>
+</footer>

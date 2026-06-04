@@ -1,0 +1,35 @@
+{{!< default}}
+
+{{!-- Author archive --}}
+
+{{#author}}
+<header class="qh-index-header fade-in d1">
+    <div style="flex:1;">
+        <h1>{{name}}</h1>
+        {{#if bio}}<p class="desc" style="text-align:left;max-width:560px;">{{bio}}</p>{{/if}}
+    </div>
+    <div class="qh-avatar" style="width:80px;height:80px;">
+        {{#if profile_image}}
+            <img src="{{img_url profile_image size="s"}}" alt="{{name}}">
+        {{/if}}
+    </div>
+</header>
+{{/author}}
+
+<div class="qh-index-body">
+    <div class="qh-trio">
+        {{#foreach posts}}
+            {{> "post-card" .}}
+        {{/foreach}}
+    </div>
+</div>
+
+{{#if pagination.pages}}
+<div class="qh-pagination">
+    <span class="qh-page-info">Page {{pagination.page}} of {{pagination.pages}}</span>
+    <div class="qh-page-controls">
+        {{#if pagination.prev}}<a href="{{page_url pagination.prev}}" class="qh-page-btn">← Newer</a>{{else}}<span class="qh-page-btn disabled">← Newer</span>{{/if}}
+        {{#if pagination.next}}<a href="{{page_url pagination.next}}" class="qh-page-btn">Older →</a>{{else}}<span class="qh-page-btn disabled">Older →</span>{{/if}}
+    </div>
+</div>
+{{/if}}

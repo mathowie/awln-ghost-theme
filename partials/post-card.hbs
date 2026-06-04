@@ -1,0 +1,17 @@
+<article class="qh-card {{post_class}}"{{#if codeinjection_head}} data-codeinjection-head="{{codeinjection_head}}"{{/if}}>
+    <a href="{{url}}" style="display:block;color:inherit;text-decoration:none;">
+        {{#if feature_image}}
+        <div class="qh-card-image">
+            <img src="{{img_url feature_image size="m"}}"
+                 srcset="{{img_url feature_image size="s"}} 600w,
+                         {{img_url feature_image size="m"}} 1000w"
+                 sizes="(max-width: 900px) 100vw, 400px"
+                 alt="{{#if feature_image_alt}}{{feature_image_alt}}{{else}}{{title}}{{/if}}"
+                 loading="lazy">
+        </div>
+        {{/if}}
+        <span class="qh-card-date">{{date published_at format="MMM D, YYYY"}}</span>
+        <h2 class="qh-card-title">{{title}}</h2>
+        <div class="qh-card-meta">{{reading_time}}</div>
+    </a>
+</article>
