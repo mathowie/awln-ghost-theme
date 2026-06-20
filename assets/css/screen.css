@@ -123,13 +123,24 @@ img { max-width: 100%; height: auto; display: block; }
   margin: 0 auto;
   padding: 1.1rem 2rem;
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
+  align-items: flex-end;
   gap: 2rem;
   font-family: var(--font-sans);
   font-size: 0.82rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+/* Right-anchored cluster of action buttons (search, theme toggle, Subscribe).
+   margin-left: auto pushes the whole group to the far right while letting the
+   logo and primary nav links sit naturally on the left. align-items: flex-end
+   keeps every item — including the icon buttons — bottom-aligned with the
+   Subscribe pill, matching the parent's shared bottom line. */
+.qh-nav-actions {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  margin-left: auto;
 }
 .qh-logo {
   font-family: var(--font-heading);
@@ -1313,13 +1324,10 @@ body.show-dropcap .qh-prose > p:first-of-type::first-letter {
   .qh-trio { grid-template-columns: repeat(2, 1fr); gap: 2.5rem 1.75rem; }
   /* Hide primary nav in header on mobile; footer still shows it stacked. */
   .qh-nav > .qh-nav-inner > .qh-nav-links { display: none; }
-  /* Hide the subscribe and edit buttons too when collapsed; hamburger is
-     the single entry point on mobile. */
-  .qh-nav-subscribe, .qh-theme-toggle, .qh-nav-search { display: none; }
-  .qh-nav-toggle { display: flex; }
-  /* Hamburger has no text content -> no real baseline. On mobile,
-     switch to center alignment so the icon lines up with the wordmark. */
-  .qh-nav-inner { align-items: center; }
+  /* Hide the entire action cluster (search + theme + Subscribe) when collapsed;
+     hamburger is the single entry point on mobile. */
+  .qh-nav-actions { display: none; }
+  .qh-nav-toggle { display: flex; margin-left: auto; }
 
   .qh-index-header { flex-direction: column; align-items: flex-start; }
   .qh-index-header .desc { text-align: left; }
