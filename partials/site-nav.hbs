@@ -12,11 +12,6 @@
             {{navigation}}
         {{/if}}
 
-        {{!-- Hidden by default; revealed by main.js when admin mode is on
-             (toggle by visiting ?awln_admin=1 once). On post/page views the
-             link href is set to /ghost/#/editor/<type>/<id> client-side. --}}
-        <a href="/ghost/" class="qh-nav-edit" data-edit-link hidden>Edit</a>
-
         {{!-- Ghost's native search. The data-ghost-search attribute makes
              any element a trigger for the built-in search modal; Ghost
              wires up the click handler and Cmd/Ctrl+K shortcut automatically. --}}

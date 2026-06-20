@@ -177,29 +177,6 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .qh-nav-subscribe:hover { background: var(--ink); transform: translateY(-1px); }
 
-/* Admin edit link — only visible to admins via localStorage toggle */
-.qh-nav-edit {
-  font-family: var(--font-sans);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  padding: 0.5rem 0.85rem;
-  color: var(--ink-muted);
-  border: 1px solid var(--rule);
-  border-radius: 999px;
-  text-decoration: none;
-  transition: color 0.2s, border-color 0.2s;
-}
-.qh-nav-edit::before {
-  content: "✎ ";
-  margin-right: 0.2em;
-}
-.qh-nav-edit:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
 /* Nav search button — triggers Ghost's native search modal via
    data-ghost-search attribute. Styled to match the theme toggle. */
 .qh-nav-search {
@@ -1338,7 +1315,7 @@ body.show-dropcap .qh-prose > p:first-of-type::first-letter {
   .qh-nav > .qh-nav-inner > .qh-nav-links { display: none; }
   /* Hide the subscribe and edit buttons too when collapsed; hamburger is
      the single entry point on mobile. */
-  .qh-nav-subscribe, .qh-nav-edit, .qh-theme-toggle, .qh-nav-search { display: none; }
+  .qh-nav-subscribe, .qh-theme-toggle, .qh-nav-search { display: none; }
   .qh-nav-toggle { display: flex; }
   /* Hamburger has no text content -> no real baseline. On mobile,
      switch to center alignment so the icon lines up with the wordmark. */

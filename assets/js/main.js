@@ -165,37 +165,6 @@
     applyAccentToTitle(title, accent);
   });
 
-  // Admin edit link: shown only when admin mode is on in this browser.
-  // Toggle: visit any page with ?awln_admin=1 to enable, ?awln_admin=0 to
-  // disable. Stored in localStorage and persists across sessions on this
-  // device. The actual link target is computed from the post/page article's
-  // data-post-id and data-post-type attributes.
-  try {
-    var params = new URLSearchParams(window.location.search);
-    if (params.has('awln_admin')) {
-      if (params.get('awln_admin') === '1') {
-        localStorage.setItem('awln_admin', '1');
-      } else {
-        localStorage.removeItem('awln_admin');
-      }
-    }
-    if (localStorage.getItem('awln_admin') === '1') {
-      var editLink = document.querySelector('[data-edit-link]');
-      if (editLink) {
-        var article = document.querySelector('[data-post-id]');
-        if (article) {
-          var id = article.getAttribute('data-post-id');
-          var type = article.getAttribute('data-post-type') || 'post';
-          editLink.href = '/ghost/#/editor/' + type + '/' + id;
-        }
-        // On non-post pages the link still points at /ghost/ (the dashboard).
-        editLink.removeAttribute('hidden');
-      }
-    }
-  } catch (e) {
-    // localStorage can throw in private mode; silently skip in that case.
-  }
-
   // Mobile hamburger menu. Builds a dropdown from the primary nav links
   // plus a Subscribe button, and toggles visibility when the hamburger
   // button is clicked.
