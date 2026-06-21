@@ -1,7 +1,7 @@
 {
   "name": "awln",
   "description": "An editorial Ghost theme built for A Whole Lotta Nothing \u2014 readable typography, large-format photography, and a featured-plus-trio post grid.",
-  "version": "1.3.7",
+  "version": "1.3.8",
   "engines": {
     "ghost": ">=5.0.0"
   },

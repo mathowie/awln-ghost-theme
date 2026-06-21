@@ -123,7 +123,7 @@ img { max-width: 100%; height: auto; display: block; }
   margin: 0 auto;
   padding: 1.1rem 2rem;
   display: flex;
-  align-items: flex-end;
+  align-items: baseline;
   gap: 2rem;
   font-family: var(--font-sans);
   font-size: 0.82rem;
@@ -134,8 +134,10 @@ img { max-width: 100%; height: auto; display: block; }
 /* Right-anchored cluster of action buttons (search, theme toggle, Subscribe).
    margin-left: auto pushes the whole group to the far right while letting the
    logo and primary nav links sit naturally on the left. align-items: flex-end
-   keeps every item — including the icon buttons — bottom-aligned with the
-   Subscribe pill, matching the parent's shared bottom line. */
+   keeps the icon buttons and the Subscribe pill bottom-aligned with each other,
+   while the cluster as a whole rides on the parent's baseline (its first item
+   — the search button — has no text, so its synthesized baseline is its bottom
+   edge, which lands right at the wordmark's text baseline). */
 .qh-nav-actions {
   display: flex;
   align-items: flex-end;
