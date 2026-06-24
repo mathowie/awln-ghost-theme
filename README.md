@@ -58,6 +58,25 @@ block-form dynamic partial pattern, so if Ghost adds a new platform before
 this theme ships an icon for it, the row falls back to a small text chip
 labelled with the platform name instead of throwing a page error.
 
+### Favicon
+
+The theme ships three favicon files in `assets/`:
+
+- `favicon.svg` — vector master, referenced from `default.hbs` as the primary
+  icon. A burnt-orange rounded tile with a cream "void" in the center,
+  riffing on the blog's name.
+- `favicon-512.png` — 512×512 rasterized PNG for uploading to
+  **Ghost Admin → Settings → General → Publication identity → Site icon**.
+  Ghost uses this to serve `/favicon.ico` and other size variants to
+  browsers that don't request the SVG.
+- `favicon-180.png` — 180×180 PNG referenced as `<link rel="apple-touch-icon">`
+  in `default.hbs`, used by iOS when readers add the site to their Home Screen.
+
+If you set a site icon in Ghost admin, it takes precedence over the theme's
+SVG for browsers that ask for `.ico` first. To replace the theme's mark with
+your own, overwrite `assets/favicon.svg` and regenerate the PNGs at the same
+sizes (`rsvg-convert -w 512 favicon.svg > favicon-512.png`, etc.).
+
 ### Site title
 
 The nav and footer pull from your site title. The accent-colored italic word

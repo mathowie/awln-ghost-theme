@@ -12,6 +12,15 @@
     <meta name="theme-color" content="#d9d1c0" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#3d342c" media="(prefers-color-scheme: dark)">
 
+    {{!-- Favicon. Ships an SVG with the theme so the icon is set even on
+         a fresh install. If a site icon is uploaded in Ghost admin
+         (Settings → General → Publication identity), that one wins and
+         is served at /favicon.ico — these <link>s stay as the SVG/PNG
+         fallback for browsers that prefer vector icons (Chrome, Safari,
+         Firefox) and for iOS Home Screen shortcuts. --}}
+    <link rel="icon" type="image/svg+xml" href="{{asset "favicon.svg"}}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{asset "favicon-180.png"}}">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Signika+Negative:wght@300;400;500;600;700&display=swap" rel="stylesheet">
